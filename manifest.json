@@ -12,8 +12,8 @@
     "content_scripts": [
         {
         "matches": [
-            "http://*/*",
-            "https://*/*"
+            "http://bugzilla.eng.vmware.com/*",
+            "https://trello.com/*"
             ],
         "js": [
             "jquery-1.12.4.js",

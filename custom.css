@@ -3,3 +3,11 @@
     font-size: .8em;
     padding: 0.1;
 }
+
+.hide {
+	display: none;
+}
+
+.show {
+	display: inline;
+}
