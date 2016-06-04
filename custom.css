@@ -1,0 +1,13 @@
+.ui-dialog.success-dialog {
+    font-family: Verdana,Arial,sans-serif;
+    font-size: .8em;
+    padding: 0.1;
+}
+
+.hide {
+	display: none;
+}
+
+.show {
+	display: inline;
+}

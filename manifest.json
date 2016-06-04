@@ -1,0 +1,31 @@
+{
+    "name": "Bugzilla2Trello",
+    "description": "Create Trello Card for Bug",
+    "version": "0.1",
+    "permissions": [
+    "tabs","<all_urls>"
+    ],
+    "browser_action": {
+        "default_icon": "icon.png"
+    },
+
+    "content_scripts": [
+        {
+        "matches": [
+            "http://bugzilla.eng.vmware.com/*",
+            "https://trello.com/*"
+            ],
+        "js": [
+            "jquery-1.12.4.js",
+            "jquery-ui.js",
+            "content.js",
+            "client.js"
+            ],
+        "css": [
+            "custom.css"
+        ],
+        "run_at": "document_end"
+        }
+    ],
+    "manifest_version":2
+}
