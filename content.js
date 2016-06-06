@@ -3,19 +3,18 @@ var B2T = B2T || {};
 
 B2T.UTIL = {
     constructDialogHtml: function(dialogHolderId) {
-        return '<div id="holder" class="hide">' +
-            '<div id="' + dialogHolderId + '">' +
-            '<div>Select your trello board & list.</div>' +
-            '<div class="error"></div>' +
-            '<div>Select Board:</div>' +
-            '<select id="boardId"></select>' +
-            '<div>Select List:</div>' +
-            '<select id="listId"></select>' +
-            '<div></div>' +
-            '</div>' +
-            '<div></div>' // Used for error dialog.
-            +
-            '</div>';
+        return  '<div id="holder" class="hide">' +
+                    '<div id="' + dialogHolderId + '">' +
+                        '<div>Select your trello board & list.</div>' +
+                        '<div class="error"></div>' +
+                        '<div>Select Board:</div>' +
+                        '<select id="boardId"></select>' +
+                        '<div>Select List:</div>' +
+                            '<select id="listId"></select>' +
+                        '<div></div>' +
+                    '</div>' +
+                    '<div></div>' +// Used for error dialog.
+                '</div>';
     },
 
     constructButton: function(id, name) {
@@ -122,9 +121,6 @@ B2T.DialogManager = new function() {
         $('#listId').find('option').remove();
         if (board == "Select a board") {
             $('#lists').append('<option>Select a list</option>');
-            //$("#add-bug").removeClass("btn-primary");
-            //$("#add-bug").addClass("disabled");
-            //$("i").removeClass("icon-white");
         } else {
             Trello.get("boards/" + board + "/lists", function(lists) {
                 $.each(lists, function(ix, lists) {
@@ -132,9 +128,6 @@ B2T.DialogManager = new function() {
                 });
             });
             $("#listId").val($("#listId option:first").val());
-            //$("#add-bug").addClass("btn-primary");
-            //$("#add-bug").removeClass("disabled");
-            //$("i").addClass("icon-white");
         }
     }
 
@@ -144,6 +137,7 @@ B2T.DialogManager = new function() {
 var authenticationSuccess = function() {
     console.log('Successful authentication');
     B2T.DialogManager.getDialog().dialog('open');
+    B2T.DialogManager.getBoards();
 };
 
 var authenticationFailure = function() {
@@ -152,8 +146,33 @@ var authenticationFailure = function() {
 };
 
 function createTrelloCard(dialog) {
-    $(dialog).dialog("close");
+    var bugInfo = getBugInfo();
+    Trello.post('cards', {
+        name: 'Bug ' + bugInfo.bugNumber + ': ' + bugInfo.desc,
+        desc: 'Bug: ' + bugInfo.link + 
+              '\nBug Product: ' + bugInfo.product  + ' > '
+                                + bugInfo.category + ' > ' 
+                                + bugInfo.component +
+              '\nAssigned To: ' + bugInfo.assignee + 
+              '\nPriority: '    + bugInfo.priority + '\n\n---\n' + bugInfo.comment,
+        idList: $('#listId :selected').val(),
+    });
+    $(dialog).dialog("close")
 };
+
+function getBugInfo() {
+    return {
+        link:'https://bugzilla.eng.vmware.com' + $('#iconBugReload').attr('href'),
+        bugNumber: $('#iconBugReload').attr('href').split('=')[1],
+        desc: $('#short_desc').attr('value'),
+        assignee: $('#bugPeople .noHide a').attr('href').split('q=')[1],
+        priority: $('#priority :selected').text(),
+        comment: $('#comment_text_0').text(),
+        product: $('#priority :selected').text(),
+        category: $('#category :selected').text(),
+        component: $('#component :selected').text()
+    }
+}
 
 function authorizeTrello() {
     Trello.authorize({
@@ -184,8 +203,8 @@ $(document).ready(function() {
 
     newButton.on('click', buttonClicked);
 
-    // $('#bugState').append(newButton);
-    // $('#bugState').append(B2T.UTIL.constructDialogHtml('dialogHolder'));
+    //$('#bugState').append(newButton);
+    //$('#bugState').append(B2T.UTIL.constructDialogHtml('dialogHolder'));
     // $('#addToTrello').css({"float": "right"});
 
 });
