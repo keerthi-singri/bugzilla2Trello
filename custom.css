@@ -11,3 +11,14 @@
 .show {
 	display: inline;
 }
+
+.trello-button {
+    position: absolute;
+    right: -6.8em;
+    top: 0;
+    padding: 3px 8px 4px;
+    border-radius: 5px;
+    border: none;
+    color: #FFFFFF;
+    background: linear-gradient(45deg, #0000B0, #33ADDF)
+}

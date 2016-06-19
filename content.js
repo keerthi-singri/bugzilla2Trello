@@ -1,3 +1,11 @@
+/*
+ * Bugzilla2Trello - https://github.com/knsingri/bugzilla2Trello
+ *
+ * @author Keerthi Singri (<keerthi_sn@yahoo.com>)
+ * @author Quchao <?>
+ *
+ */
+
 // Global namespace
 var B2T = B2T || {};
 
@@ -22,6 +30,7 @@ B2T.UTIL = {
             type: "button",
             id: id,
             value: name,
+            class: 'trello-button'
         });
     }
 };
@@ -84,7 +93,7 @@ B2T.DialogManager = new function() {
         this.dialogHolder.next()
             .text(errorMsg)
             .dialog({
-                title: "Authentication Error",
+                title: "Trello Authentication Error",
                 autoOpen: true,
                 modal: false,
                 draggable: true,
@@ -112,6 +121,8 @@ B2T.DialogManager = new function() {
             });
         });
         $("#boardId").off('change').on('change', this.boardSelected);
+        //  Invoke the function since the first board is selected.
+        $(this).boardSelected();
     };
 
     this.boardSelected = function() {
@@ -157,9 +168,13 @@ function createTrelloCard(dialog) {
               '\nPriority: '    + bugInfo.priority + '\n\n---\n' + bugInfo.comment,
         idList: $('#listId :selected').val(),
     });
+    //  Add these to callback and wait for completion, handle error condition.
+    console.log('Trello card created for bug: ' + bugInfo.bugNumber);
     $(dialog).dialog("close")
 };
 
+//  This info is specific to Bugzilla 3.0.x
+// TODO: Abstract this out based on Bugzilla version info.
 function getBugInfo() {
     return {
         link:'https://bugzilla.eng.vmware.com' + $('#iconBugReload').attr('href'),
@@ -197,14 +212,10 @@ var buttonClicked = function() {
 }
 
 $(document).ready(function() {
-    var newButton = B2T.UTIL.constructButton("addToTrello", "Trello").insertAfter('#bugSummary');
+    var newButton = B2T.UTIL.constructButton("addToTrello", "BugToTrello").insertAfter('#bugSummary');
     $('#bugSummary').append(B2T.UTIL.constructDialogHtml('dialogManager'));
     B2T.DialogManager.init('dialogManager');
 
     newButton.on('click', buttonClicked);
-
-    //$('#bugState').append(newButton);
-    //$('#bugState').append(B2T.UTIL.constructDialogHtml('dialogHolder'));
-    // $('#addToTrello').css({"float": "right"});
 
 });

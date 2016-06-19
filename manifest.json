@@ -1,7 +1,7 @@
 {
     "name": "Bugzilla2Trello",
-    "description": "Create Trello Card for Bug",
-    "version": "0.1",
+    "description": "Create Trello Card from Bugzilla 3.0.x version.",
+    "version": "0.2",
     "permissions": [
     "tabs","<all_urls>"
     ],
