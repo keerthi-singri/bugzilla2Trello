@@ -2,13 +2,14 @@
  * Bugzilla2Trello - https://github.com/knsingri/bugzilla2Trello
  *
  * @author Keerthi Singri (<keerthi_sn@yahoo.com>)
- * @author Quchao <?>
+ * @author Qichao Chu (<chuq@vmware.com>>)
  *
  */
 
 // Global namespace
 var B2T = B2T || {};
 
+// Util functions, build html structures.
 B2T.UTIL = {
     constructDialogHtml: function(dialogHolderId) {
         return  '<div id="holder" class="hide">' +
@@ -35,6 +36,7 @@ B2T.UTIL = {
     }
 };
 
+// Dialog managemnet functionality.
 B2T.DialogManager = new function() {
     this.dialogHolder = null;
 
@@ -211,8 +213,9 @@ var buttonClicked = function() {
     }
 }
 
+// Invoked upon document load.
 $(document).ready(function() {
-    var newButton = B2T.UTIL.constructButton("addToTrello", "BugToTrello").insertAfter('#bugSummary');
+    var newButton = B2T.UTIL.constructButton("addToTrello", "Bug2Trello").insertAfter('#bugSummary');
     $('#bugSummary').append(B2T.UTIL.constructDialogHtml('dialogManager'));
     B2T.DialogManager.init('dialogManager');
 
