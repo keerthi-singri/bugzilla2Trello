@@ -116,17 +116,6 @@ B2T.DialogManager = new function() {
             });
     };
 
-    this.getBoards = function() {
-        Trello.get("/members/me/boards?filter=open", function(boards) {
-            $.each(boards, function(ix, boards) {
-                $(new Option(boards.name, boards.id)).appendTo("#boardId");
-            });
-        });
-        $("#boardId").off('change').on('change', this.boardSelected);
-        //  Invoke the function since the first board is selected.
-        $(this).boardSelected();
-    };
-
     this.boardSelected = function() {
         var board = $('#boardId :selected').val();
         var boardLink = "https://trello.com/board/" + board
@@ -142,7 +131,30 @@ B2T.DialogManager = new function() {
             });
             $("#listId").val($("#listId option:first").val());
         }
-    }
+    };
+
+    this.getBoards = function() {
+        var localCB = this.boardSelected;   // Defined above.
+        Trello.get("/members/me/boards?filter=open", function(boards) {
+            $.each(boards, function(ix, boards) {
+                $(new Option(boards.name, boards.id)).appendTo("#boardId");
+            });
+            if ($.isFunction(localCB)) {
+                //  Invoke the load list function since board is populated.
+                localCB();
+            }
+        });
+        // Add event handler to trigger when the board selection changes.
+        $("#boardId").off('change').on('change', this.boardSelected);
+    };
+
+    // Wrapper function that initializes all of the dialog.
+    this.initDialog = function() {
+        this.getBoards();       // Defined above.
+
+        // (optimize) Remember last used board and list.
+    };
+
 
 
 }; // End of B2T.DialogManager
@@ -150,7 +162,7 @@ B2T.DialogManager = new function() {
 var authenticationSuccess = function() {
     console.log('Successful authentication');
     B2T.DialogManager.getDialog().dialog('open');
-    B2T.DialogManager.getBoards();
+    B2T.DialogManager.initDialog();
 };
 
 var authenticationFailure = function() {
